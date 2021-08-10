@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>AWS Console Extension Options</title>
+	<link rel="stylesheet" href="options.css">
+</head>
+
+<body>
+	<h1>AWS Console Extension Options</h1>
+
+	<h2>Regions</h2>
+
+	<span class="button-text">Region Warning Enabled</span>
+	<label class="switch">
+		<input id="regionsEnabled" type="checkbox">
+		<span class="slider"></span>
+	</label>
+	<div id="regions" style="dislay:flex"></div>
+
+	<h2>Accounts</h2>
+
+	<div style="display: flex">
+		<label class="button" for="download">Download</label>
+		<input type="button" id="download" style="display: none;">
+
+		<label class="button" for="picker">Upload</label>
+		<input type="file" id="picker" style="display: none;">
+
+		<label class="button" for="reset">Reset</label>
+		<input type="button" id="reset" style="display: none;">
+	</div>
+
+	<div id="accounts"></div>
+
+	<script src="options.js"></script>
+</body>
+
+</html>
