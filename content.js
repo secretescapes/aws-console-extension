@@ -1,10 +1,7 @@
-var isChrome, chrome
+var chrome
 
 if (typeof browser === "undefined") {
 	var browser = chrome
-	isChrome = true
-} else {
-	isChrome = false
 }
 
 var navbar = document.getElementById('awsc-nav-header').lastChild
@@ -180,22 +177,15 @@ function togglePanel() {
 }
 
 function load() {
-	if (isChrome) {
-		browser.storage.local.get(['accounts', 'filters'], (res) => {
-			generate(
-				res.accounts,
-				res.filters.filter((v,i,a) => { return v.includes("role:")}),
-				res.filters.filter((v,i,a) => { return v.includes("env:")})
-			)
-			generateFilters(res.filters)
-		})
-	} else {
-		var accounts = browser.storage.local.get('accounts')
-		accounts.then((res) => {
-			generate(res.accounts)
-		})
-	}
-
+	browser.storage.local.get(['accounts', 'filters'], (res) => {
+		res.filters = res.filters || []
+		generate(
+			res.accounts,
+			res.filters.filter((v,i,a) => { return v.includes("role:")}),
+			res.filters.filter((v,i,a) => { return v.includes("env:")})
+		)
+		generateFilters(res.filters)
+	})
 }
 
 var icon = document.createElement("img")

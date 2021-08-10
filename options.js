@@ -67,7 +67,8 @@ function createSection(div, account, roles) {
 function loadRegions() {
 	browser.storage.local.get(['regionsList', 'regions'], items => {
 
-		var regionsList = items.regionsList || [
+		items.regions = items.regions || []
+		items.regionsList = items.regionsList || [
 			'Global',
 			'N. Virginia | us-east-1',
 			'Ohio | us-east-2',
@@ -92,7 +93,7 @@ function loadRegions() {
 			'S\xE3o Paulo | sa-east-1'
 		]
 
-		for (r of regionsList) {
+		for (r of items.regionsList) {
 
 			text = r.split('|')[0].trim()
 
@@ -118,11 +119,11 @@ function load() {
 	div.innerHTML = ''
 	regions.innerHTML = ''
 	browser.storage.local.get(['accounts', 'regionsEnabled'], items => {
-		regionsEnabled.checked = items.regionsEnabled
+		regionsEnabled.checked = items.regionsEnabled || false
 		if (items.regionsEnabled) {
 			loadRegions()
 		}
-		Object.entries(items.accounts).forEach(([account, roles]) => {
+		Object.entries(items.accounts||[]).forEach(([account, roles]) => {
 			createSection(div, account, roles)
 		})
 	})

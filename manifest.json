@@ -31,7 +31,9 @@
 		"images/tragedy.png"
 	],
 
-	"options_page": "options.html",
+	"options_ui": {
+		"page": "options.html"
+	},
 
 	"permissions": [
 		"storage",
