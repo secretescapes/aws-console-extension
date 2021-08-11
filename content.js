@@ -244,7 +244,6 @@ optionsLabel.style.cssText = `
 var filtersDiv = document.createElement("div")
 filtersDiv.style.cssText = `
 	display: flex;
-	width: 100%;
 	flex-wrap: wrap;
 	border-bottom: 1px solid grey;
 	padding: 10px;
