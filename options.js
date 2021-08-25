@@ -2,7 +2,6 @@ var chrome
 
 if (typeof browser === "undefined") {
 	var browser = chrome
-	var confirm = chrome.extension.getBackgroundPage().confirm
 }
 
 const headers = ['Account', 'Role', 'Environment', 'Colour']
