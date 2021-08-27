@@ -6,7 +6,15 @@ if (typeof browser === "undefined") {
 
 const headers = ['Account', 'Role', 'Environment', 'Colour']
 
+var isHex = /^([A-FZ0-9]{3}){1,2}$/i;
+
 var regions = document.getElementById("regions")
+var regionsConfig = document.getElementById("regionsConfig")
+var downloadJSONLabel = document.getElementById("downloadJSONLabel")
+var uploadJSONLabel = document.getElementById("uploadJSONLabel")
+var saveLabel = document.getElementById("saveLabel")
+var cancelLabel = document.getElementById("cancelLabel")
+var editLabel = document.getElementById("editLabel")
 
 function createRoleCol(tr, value, color=false) {
 	var td = document.createElement('td')
@@ -17,7 +25,6 @@ function createRoleCol(tr, value, color=false) {
 		td.style.borderRight = `20px solid #${value}`
 	}
 }
-
 
 function createSection(div, account, roles) {
 
@@ -68,6 +75,24 @@ function createSection(div, account, roles) {
 	div.appendChild(br)
 }
 
+function handleRegionClick() {
+	browser.storage.local.get(['regions'], items => {
+		var _regions = items.regions || []
+
+		if (_regions.includes(this.value)) {
+			_regions = _regions.filter((v,i,a)=>{
+				return v != this.value
+			})
+		} else {
+			_regions.push(this.value)
+		}
+
+		browser.storage.local.set({
+			regions: _regions
+		})
+	})
+}
+
 function loadRegions() {
 	browser.storage.local.get(['regionsList', 'regions'], items => {
 
@@ -111,9 +136,9 @@ function loadRegions() {
 
 			var regionLabel = document.createElement('label')
 			regionLabel.textContent = r
-			regions.appendChild(regionInput)
-			regions.appendChild(regionLabel)
-			regions.appendChild(br)
+			regionsConfig.appendChild(regionInput)
+			regionsConfig.appendChild(regionLabel)
+			regionsConfig.appendChild(br)
 		}
 	})
 }
@@ -121,7 +146,7 @@ function loadRegions() {
 function load() {
 	var div = document.getElementById('accounts')
 	div.innerHTML = ''
-	regions.innerHTML = ''
+	regionsConfig.innerHTML = ''
 	browser.storage.local.get(['accounts', 'regionsEnabled'], items => {
 		regionsEnabled.checked = items.regionsEnabled || false
 		if (items.regionsEnabled) {
@@ -130,62 +155,19 @@ function load() {
 		Object.entries(items.accounts||[]).forEach(([account, roles]) => {
 			createSection(div, account, roles)
 		})
+
+		regions.style.display = "block"
+		downloadJSONLabel.style.display = "block"
+		uploadJSONLabel.style.display = "block"
 		editLabel.style.display = "block"
 		cancelLabel.style.display = "none"
 		saveLabel.style.display = "none"
 	})
 }
 
-function handleDownload() {
-	browser.storage.local.get('accounts', (res) => {
-		var json = JSON.stringify(res.accounts)
-		var blob = new Blob([json], {type: "application/json"})
-		var url = URL.createObjectURL(blob)
-		browser.downloads.download({
-			url: url,
-			filename: 'accounts.json',
-			conflictAction: 'uniquify'
-		})
-	})
-}
-var download = document.getElementById("download")
-download.addEventListener("click", handleDownload, false)
-
-function handlePicked() {
-	var reader = new FileReader()
-	reader.onload = (e) => {
-		browser.storage.local.set({
-			accounts: JSON.parse(e.target.result)
-		})
-	}
-	reader.readAsText(this.files[0], "UTF-8")
-}
-var filePicker = document.getElementById("picker")
-filePicker.addEventListener("change", handlePicked, false)
-
-function handleReset() {
-	if (confirm('Are you sure you want to reset? This will remove all your account information')) {
-		browser.storage.local.set({
-			accounts: {}
-		})
-	}
-}
-var reset = document.getElementById("reset")
-reset.addEventListener("click", handleReset, false)
-
-function handleRegionsEnabled() {
-	browser.storage.local.set({
-		regionsEnabled: regionsEnabled.checked
-	})
-}
-var regionsEnabled = document.getElementById("regionsEnabled")
-regionsEnabled.addEventListener("click", handleRegionsEnabled, false)
-
 function deleteDiv() {
 	this.parentElement.remove()
 }
-
-var isHex = /^([A-FZ0-9]{3}){1,2}$/i;
 
 function colorChange() {
 	if (isHex.exec(this.value)) {
@@ -270,11 +252,6 @@ function createEditSection(div, account, roles) {
 	addAddRoleButton(groupDiv)
 }
 
-var saveLabel = document.getElementById("saveLabel")
-var cancelLabel = document.getElementById("cancelLabel")
-var editLabel = document.getElementById("editLabel")
-
-
 function addGroupRow(div, groupName = '', before) {
 
 	var groupDiv = document.createElement('div')
@@ -327,6 +304,9 @@ function handleEdit() {
 			createEditSection(div, account, roles)
 		})
 	})
+	regions.style.display = "none"
+	downloadJSONLabel.style.display = "none"
+	uploadJSONLabel.style.display = "none"
 	editLabel.style.display = "none"
 	cancelLabel.style.display = "block"
 	saveLabel.style.display = "block"
@@ -334,15 +314,8 @@ function handleEdit() {
 var edit = document.getElementById("edit")
 edit.addEventListener("click", handleEdit, false)
 
-function handleCancel() {
-	editLabel.style.display = "block"
-	cancelLabel.style.display = "none"
-	saveLabel.style.display = "none"
-	load()
-}
 var cancel = document.getElementById("cancel")
-cancel.addEventListener("click", handleCancel, false)
-
+cancel.addEventListener("click", load, false)
 
 function handleSave() {
 
@@ -399,34 +372,58 @@ function handleSave() {
 	}
 
 	browser.storage.local.set({
+		timestamp: Date.now(),
 		accounts: accounts
 	})
 }
 var save = document.getElementById("save")
 save.addEventListener("click", handleSave, false)
 
-
-function handleRegionClick() {
-	browser.storage.local.get(['regions'], items => {
-		var _regions = items.regions || []
-
-		if (_regions.includes(this.value)) {
-			_regions = _regions.filter((v,i,a)=>{
-				return v != this.value
-			})
-		} else {
-			_regions.push(this.value)
-		}
-
+function handleReset() {
+	if (confirm('Are you sure you want to reset? This will remove all your account information')) {
 		browser.storage.local.set({
-			regions: _regions
+			accounts: {}
+		})
+	}
+}
+var reset = document.getElementById("reset")
+reset.addEventListener("click", handleReset, false)
+
+function handleRegionsEnabled() {
+	browser.storage.local.set({
+		regionsEnabled: regionsEnabled.checked
+	})
+}
+var regionsEnabled = document.getElementById("regionsEnabled")
+regionsEnabled.addEventListener("click", handleRegionsEnabled, false)
+
+function handleDownloadJSON() {
+	browser.storage.local.get('accounts', items => {
+		var json = JSON.stringify(items.accounts, null, 2)
+		var blob = new Blob([json], {type: "application/json"})
+		var url = URL.createObjectURL(blob)
+		browser.downloads.download({
+			url: url,
+			filename: 'accounts.json',
+			conflictAction: 'uniquify'
 		})
 	})
 }
+var downloadJSON = document.getElementById("downloadJSON")
+downloadJSON.addEventListener("click", handleDownloadJSON, false)
 
+function handleUploadJSON() {
+	var reader = new FileReader()
+	reader.onload = (e) => {
+		browser.storage.local.set({
+			accounts: JSON.parse(e.target.result)
+		})
+	}
+	reader.readAsText(this.files[0], "UTF-8")
+}
+var uploadJSON = document.getElementById("uploadJSON")
+uploadJSON.addEventListener("change", handleUploadJSON, false)
 
-browser.storage.onChanged.addListener(() => {
-	load()
-})
+browser.storage.onChanged.addListener(load)
 
 load()
