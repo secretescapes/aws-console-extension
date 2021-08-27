@@ -5,40 +5,25 @@ body {
 	font-size: 16px;
 	font-weight: 400;
 	line-height: 1;
-	color: #cecece;
+	color: white;
 	text-align: left;
 	background-color: #232f3e;
-	min-width: 800px;
-}
-
-@-moz-document url-prefix() {
-	body {
-		min-width: auto;
-	}
-}
-
-h1,
-h2 {
-	color: #FFF;
+	width: 800px;
 }
 
 h2 {
-	border-bottom: 1px solid #ff8c00;
-}
-
-table {
+	border-bottom: 3px solid #ff8c00;
 }
 
 a {
 	color: #FF8C00;
 }
 
-
-#regions {
+#regionsConfig {
 	margin-top: 20px;
 }
 
-#accounts {
+#accountsConfig {
 	margin-top: 20px;
 }
 
@@ -51,31 +36,69 @@ input[type="text"] {
 	font-size: 14px;
 }
 
-input[name="color"] {
+input[name="group"] {
+	width: 100px;
+}
+
+input[name="account"] {
+	width: 100px;
+}
+
+input[name="role"] {
+	width: 100px;
+}
+
+input[name="environment"] {
 	width: 150px;
+}
+
+input[name="color"] {
+	width: 50px;
 	border-right: 28px solid transparent;
+	font-family: Monospace;
+}
+
+input[disabled] {
+	width: 100px;
+	background-color: #232f3e;
+	color: white;
+}
+
+input[disabled][name="group"] {
+	display: block;
+	font-size: 1.5em;
+	margin-bottom: 5px;
+	font-weight: bold;
+	width: 100%;
+	border-bottom: 1px solid #ff8c00;
+}
+
+input[disabled][name="color"] {
+	width: 60px;
 }
 
 .deleteButton {
+	font-family: Arial, Helvetica, sans-serif;
 	background-color: transparent;
 	color: red;
-	border: 1px solid red;
-	display: inline-block;
-	margin: 2px;
-	vertical-align: middle;
-	padding: 5px 10px;
+	display: none;
+	margin: 4px;
 	cursor: pointer;
+	font-weight: bold;
 }
 
 .addButton {
-	background-color: transparent;
-	color: green;
-	border: 1px solid green;
-	display: inline-block;
-	margin-top: 2px;
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: #4caf50;
+	color: white;
+	display: none;
+	margin: 4px 0 10px 0;
 	vertical-align: middle;
-	padding: 5px 10px;
 	cursor: pointer;
+	width: 460px;
+	text-align: center;
+	padding: 6px;
+	font-weight: bold;
 }
 
 .button {

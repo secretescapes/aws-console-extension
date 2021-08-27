@@ -16,65 +16,6 @@ var saveLabel = document.getElementById("saveLabel")
 var cancelLabel = document.getElementById("cancelLabel")
 var editLabel = document.getElementById("editLabel")
 
-function createRoleCol(tr, value, color=false) {
-	var td = document.createElement('td')
-	td.innerText = value
-	tr.appendChild(td)
-	if (color) {
-		td.style.fontFamily = "Courier New"
-		td.style.borderRight = `20px solid #${value}`
-	}
-}
-
-function createSection(div, account, roles) {
-
-	var card = document.createElement('div')
-	div.appendChild(card)
-
-	var cardBody = document.createElement('div')
-	cardBody.id = account
-	card.appendChild(cardBody)
-
-	var cardHeader = document.createElement('h2')
-	cardHeader.innerText = account
-	cardBody.appendChild(cardHeader)
-
-	var table = document.createElement('table')
-	cardBody.appendChild(table)
-
-	var thead = document.createElement('thead')
-	table.appendChild(thead)
-
-	var thead_tr = document.createElement('tr')
-	thead.appendChild(thead_tr)
-
-	headers.forEach(header => {
-		var th = document.createElement('th')
-		th.innerText = header
-		thead_tr.appendChild(th)
-		if (header == 'Description') {
-			th.style.width = '40%'
-		} else {
-			th.style.width = '20%'
-		}
-	})
-
-	var tbody = document.createElement('tbody')
-	table.appendChild(tbody)
-
-	roles.forEach(role => {
-		var tbody_tr = document.createElement('tr')
-		tbody.appendChild(tbody_tr)
-		createRoleCol(tbody_tr, role.account)
-		createRoleCol(tbody_tr, role.role)
-		createRoleCol(tbody_tr, role.environment)
-		createRoleCol(tbody_tr, role.color, true)
-	})
-
-	var br = document.createElement('br')
-	div.appendChild(br)
-}
-
 function handleRegionClick() {
 	browser.storage.local.get(['regions'], items => {
 		var _regions = items.regions || []
@@ -143,28 +84,6 @@ function loadRegions() {
 	})
 }
 
-function load() {
-	var div = document.getElementById('accounts')
-	div.innerHTML = ''
-	regionsConfig.innerHTML = ''
-	browser.storage.local.get(['accounts', 'regionsEnabled'], items => {
-		regionsEnabled.checked = items.regionsEnabled || false
-		if (items.regionsEnabled) {
-			loadRegions()
-		}
-		Object.entries(items.accounts||[]).forEach(([account, roles]) => {
-			createSection(div, account, roles)
-		})
-
-		regions.style.display = "block"
-		downloadJSONLabel.style.display = "block"
-		uploadJSONLabel.style.display = "block"
-		editLabel.style.display = "block"
-		cancelLabel.style.display = "none"
-		saveLabel.style.display = "none"
-	})
-}
-
 function deleteDiv() {
 	this.parentElement.remove()
 }
@@ -182,42 +101,51 @@ function addRoleRow(groupDiv, role = {}, before) {
 	var roleDiv = document.createElement('div')
 	roleDiv.className = 'role'
 
-	if (JSON.stringify(role) === '{}') {
-		groupDiv.insertBefore(roleDiv, before)
-	} else {
-		groupDiv.appendChild(roleDiv)
-	}
-
 	var inputAccount = document.createElement('input')
 	inputAccount.name = 'account'
 	inputAccount.type = "text"
 	inputAccount.placeholder = "Account ID"
-	if (role.account) inputAccount.value = role.account
 
 	var inputRole = document.createElement('input')
 	inputRole.name = 'role'
 	inputRole.type = "text"
 	inputRole.placeholder = "Role Name"
-	if (role.role) inputRole.value = role.role
 
 	var inputEnvironment = document.createElement('input')
 	inputEnvironment.name = 'environment'
 	inputEnvironment.type = "text"
 	inputEnvironment.placeholder = "Description"
-	if (role.environment) inputEnvironment.value = role.environment
 
 	var inputColor = document.createElement('input')
 	inputColor.name = 'color'
 	inputColor.type = "text"
-	inputColor.placeholder = "Icon Hex Color"
+	inputColor.placeholder = "hexcolor"
 	inputColor.style.borderRight = `28px solid #${role.color}`
 	inputColor.addEventListener('input', colorChange, false)
-	if (role.color) inputColor.value = role.color
 
 	var roleButtonDelete = document.createElement('div')
-	roleButtonDelete.textContent = "Remove Role"
+	roleButtonDelete.textContent = "X"
 	roleButtonDelete.className = 'deleteButton'
 	roleButtonDelete.addEventListener('click', deleteDiv, false)
+
+	if (JSON.stringify(role) === '{}') {
+		groupDiv.insertBefore(roleDiv, before)
+		roleButtonDelete.style.display = "inline-block"
+	} else {
+		groupDiv.appendChild(roleDiv)
+
+		inputAccount.value = role.account
+		inputAccount.disabled = "disabled"
+
+		inputRole.value = role.role
+		inputRole.disabled = "disabled"
+
+		inputEnvironment.value = role.environment
+		inputEnvironment.disabled = "disabled"
+
+		inputColor.value = role.color
+		inputColor.disabled = "disabled"
+	}
 
 	roleDiv.appendChild(inputAccount)
 	roleDiv.appendChild(inputRole)
@@ -231,14 +159,18 @@ function addNewRole() {
 	addRoleRow(this.parentElement, {}, this)
 }
 
-function addAddRoleButton(groupDiv) {
+function addAddRoleButton(groupDiv, add) {
 	var roleButtonAdd = document.createElement('div')
-	roleButtonAdd.textContent = "Add Role"
+	roleButtonAdd.textContent = "New Role"
 	roleButtonAdd.className = "addButton"
 
 	groupDiv.appendChild(roleButtonAdd)
 	groupDiv.appendChild(document.createElement('br'))
 	roleButtonAdd.addEventListener('click', addNewRole, false)
+
+	if (add) {
+		roleButtonAdd.style.display = "inline-block"
+	}
 }
 
 function createEditSection(div, account, roles) {
@@ -257,12 +189,6 @@ function addGroupRow(div, groupName = '', before) {
 	var groupDiv = document.createElement('div')
 	groupDiv.className = 'group'
 
-	if (groupName === '') {
-		div.insertBefore(groupDiv, before)
-	} else {
-		div.appendChild(groupDiv)
-	}
-
 	groupDiv.appendChild(document.createElement('br'))
 
 	var group = document.createElement('input')
@@ -272,7 +198,7 @@ function addGroupRow(div, groupName = '', before) {
 	group.value = groupName
 
 	var groupButtonDelete = document.createElement('div')
-	groupButtonDelete.textContent = "Remove Group"
+	groupButtonDelete.textContent = "X"
 	groupButtonDelete.className = 'deleteButton'
 	groupButtonDelete.addEventListener('click', deleteDiv, false)
 
@@ -280,21 +206,30 @@ function addGroupRow(div, groupName = '', before) {
 	groupDiv.appendChild(groupButtonDelete)
 	groupDiv.appendChild(document.createElement('br'))
 
+	if (groupName === '') {
+		div.insertBefore(groupDiv, before)
+		groupButtonDelete.style.display = "inline-block"
+	} else {
+		div.appendChild(groupDiv)
+		group.disabled = "disabled"
+	}
+
 	return groupDiv
 }
 
 function addGroup() {
 	groupDiv = addGroupRow(this.parentElement, '', this.nextSibling)
-	addAddRoleButton(groupDiv)
+	addAddRoleButton(groupDiv, true)
 }
 
-function handleEdit() {
-	var div = document.getElementById('accounts')
+function load() {
+	var div = document.getElementById('accountsConfig')
 	div.innerHTML = ''
+	regionsConfig.innerHTML = ''
 
 	var addSectionButton = document.createElement('div')
 	addSectionButton.className = 'addButton'
-	addSectionButton.textContent = 'Add Group'
+	addSectionButton.textContent = 'New Group'
 	addSectionButton.addEventListener('click', addGroup, false)
 
 	div.appendChild(addSectionButton)
@@ -303,7 +238,27 @@ function handleEdit() {
 		Object.entries(items.accounts||[]).forEach(([account, roles]) => {
 			createEditSection(div, account, roles)
 		})
+		regionsEnabled.checked = items.regionsEnabled || false
+		if (items.regionsEnabled) {
+			loadRegions()
+		}
 	})
+	regions.style.display = "block"
+	downloadJSONLabel.style.display = "block"
+	uploadJSONLabel.style.display = "block"
+	editLabel.style.display = "block"
+	cancelLabel.style.display = "none"
+	saveLabel.style.display = "none"
+}
+
+function handleEdit() {
+	document.querySelectorAll('div[class*=Button]').forEach(item => {
+		item.style.display = 'inline-block'
+	})
+	document.querySelectorAll('input[type=text]').forEach(item => {
+		item.disabled = null
+	})
+
 	regions.style.display = "none"
 	downloadJSONLabel.style.display = "none"
 	uploadJSONLabel.style.display = "none"
@@ -379,16 +334,6 @@ function handleSave() {
 var save = document.getElementById("save")
 save.addEventListener("click", handleSave, false)
 
-function handleReset() {
-	if (confirm('Are you sure you want to reset? This will remove all your account information')) {
-		browser.storage.local.set({
-			accounts: {}
-		})
-	}
-}
-var reset = document.getElementById("reset")
-reset.addEventListener("click", handleReset, false)
-
 function handleRegionsEnabled() {
 	browser.storage.local.set({
 		regionsEnabled: regionsEnabled.checked
@@ -425,5 +370,4 @@ var uploadJSON = document.getElementById("uploadJSON")
 uploadJSON.addEventListener("change", handleUploadJSON, false)
 
 browser.storage.onChanged.addListener(load)
-
 load()
