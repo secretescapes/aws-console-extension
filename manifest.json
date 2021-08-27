@@ -1,11 +1,15 @@
 {
 	"manifest_version": 2,
 	"name": "aws-console-extension",
-	"version": "0.1.1",
+	"version": "0.2.0",
 
 	"author": "ian.collar@secretescapes.com",
 
 	"description": "Allows quick switching between AWS accounts and roles along with other useful features.",
+
+	"browser_action": {
+		"default_title": "AWS Console Extension"
+	},
 
 	"icons": {
 		"16": "icons/icon16.png",
