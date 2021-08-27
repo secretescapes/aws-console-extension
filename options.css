@@ -38,13 +38,49 @@ a {
 	margin-top: 20px;
 }
 
+#accounts {
+	margin-top: 20px;
+}
+
+input[type="text"] {
+	color: black;
+	border: 2px solid white;
+	margin: 2px 4px 2px 0;
+	height: 20px;
+	padding: 2px;
+	font-size: 14px;
+}
+
+.deleteButton {
+	background-color: transparent;
+	color: red;
+	border: 1px solid red;
+	display: inline-block;
+	margin: 2px;
+	vertical-align: middle;
+	padding: 5px 10px;
+	cursor: pointer;
+}
+
+.addButton {
+	background-color: transparent;
+	color: green;
+	border: 1px solid green;
+	display: inline-block;
+	margin-top: 2px;
+	vertical-align: middle;
+	padding: 5px 10px;
+	cursor: pointer;
+}
+
 .button {
 	padding: 10px;
 	border: 1px solid rgb(84, 91, 100);
 	color: white;
 	font-family: "Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
 	font-size: 14px;
-	margin-right: 10px
+	margin-right: 10px;
+	cursor: pointer;
 }
 
 .button-text {

@@ -126,6 +126,9 @@ function load() {
 		Object.entries(items.accounts||[]).forEach(([account, roles]) => {
 			createSection(div, account, roles)
 		})
+		editLabel.style.display = "block"
+		cancelLabel.style.display = "none"
+		saveLabel.style.display = "none"
 	})
 }
 
@@ -174,7 +177,245 @@ function handleRegionsEnabled() {
 var regionsEnabled = document.getElementById("regionsEnabled")
 regionsEnabled.addEventListener("click", handleRegionsEnabled, false)
 
+function deleteDiv() {
+	this.parentElement.remove()
+}
 
+function addNewRole() {
+	groupDiv = this.parentElement
+
+	var roleDiv = document.createElement('div')
+	roleDiv.className = 'role'
+	groupDiv.insertBefore(roleDiv, this)
+
+	var inputAccount = document.createElement('input')
+	inputAccount.name = "account"
+	inputAccount.type = "text"
+
+	var inputRole = document.createElement('input')
+	inputRole.name = 'role'
+	inputRole.type = "text"
+
+
+	var inputEnvironment = document.createElement('input')
+	inputEnvironment.name = "environment"
+	inputEnvironment.type = "text"
+
+	var inputColor = document.createElement('input')
+	inputColor.name = "color"
+	inputColor.type = "text"
+
+	var roleButtonDelete = document.createElement('div')
+	roleButtonDelete.textContent = "Remove Role"
+	roleButtonDelete.className = "deleteButton"
+	roleButtonDelete.addEventListener('click', deleteDiv, false)
+
+	roleDiv.appendChild(inputAccount)
+	roleDiv.appendChild(inputRole)
+	roleDiv.appendChild(inputEnvironment)
+	roleDiv.appendChild(inputColor)
+	roleDiv.appendChild(roleButtonDelete)
+	roleDiv.appendChild(document.createElement('br'))
+}
+
+function createEditSection(div, account, roles) {
+
+	var groupDiv = document.createElement('div')
+	groupDiv.className = 'group'
+	div.appendChild(groupDiv)
+
+	groupDiv.appendChild(document.createElement('br'))
+
+	var group = document.createElement('input')
+	group.name = 'group'
+	group.type = "text"
+	group.value = account
+
+	var groupButtonDelete = document.createElement('div')
+	groupButtonDelete.textContent = "Remove Group"
+	groupButtonDelete.className = 'deleteButton'
+	groupButtonDelete.addEventListener('click', deleteDiv, false)
+
+
+	groupDiv.appendChild(group)
+	groupDiv.appendChild(groupButtonDelete)
+	groupDiv.appendChild(document.createElement('br'))
+
+	roles.forEach(role => {
+
+		var roleDiv = document.createElement('div')
+		roleDiv.className = 'role'
+		groupDiv.appendChild(roleDiv)
+
+
+		var inputAccount = document.createElement('input')
+		inputAccount.name = 'account'
+		inputAccount.type = "text"
+		inputAccount.placeholder = "Account ID"
+		inputAccount.value = role.account
+
+		var inputRole = document.createElement('input')
+		inputRole.name = 'role'
+		inputRole.type = "text"
+		inputRole.placeholder = "Role Name"
+		inputRole.value = role.role
+
+		var inputEnvironment = document.createElement('input')
+		inputEnvironment.name = 'environment'
+		inputEnvironment.type = "text"
+		inputEnvironment.placeholder = "Description"
+		inputEnvironment.value = role.environment
+
+		var inputColor = document.createElement('input')
+		inputColor.name = 'color'
+		inputColor.type = "text"
+		inputColor.placeholder = "Icon Hex Color"
+		inputColor.value = role.color
+
+		var roleButtonDelete = document.createElement('div')
+		roleButtonDelete.textContent = "Remove Role"
+		roleButtonDelete.className = 'deleteButton'
+		roleButtonDelete.addEventListener('click', deleteDiv, false)
+
+		roleDiv.appendChild(inputAccount)
+		roleDiv.appendChild(inputRole)
+		roleDiv.appendChild(inputEnvironment)
+		roleDiv.appendChild(inputColor)
+		roleDiv.appendChild(roleButtonDelete)
+		roleDiv.appendChild(document.createElement('br'))
+	})
+
+	var roleButtonAdd = document.createElement('div')
+	roleButtonAdd.textContent = "Add Role"
+	roleButtonAdd.className = "addButton"
+
+	groupDiv.appendChild(roleButtonAdd)
+	groupDiv.appendChild(document.createElement('br'))
+	roleButtonAdd.addEventListener('click', addNewRole, false)
+
+}
+
+var saveLabel = document.getElementById("saveLabel")
+var cancelLabel = document.getElementById("cancelLabel")
+var editLabel = document.getElementById("editLabel")
+
+
+function addGroup() {
+	var groupDiv = document.createElement('div')
+	groupDiv.className = 'group'
+	this.parentElement.insertBefore(groupDiv, this.nextSibling)
+
+	groupDiv.appendChild(document.createElement('br'))
+
+	var group = document.createElement('input')
+	group.name = 'group'
+	group.type = "text"
+	group.placeholder = "Group name"
+
+	var groupButtonDelete = document.createElement('div')
+	groupButtonDelete.textContent = "Remove Group"
+	groupButtonDelete.className = 'deleteButton'
+	groupButtonDelete.addEventListener('click', deleteDiv, false)
+
+	groupDiv.appendChild(group)
+	groupDiv.appendChild(groupButtonDelete)
+	groupDiv.appendChild(document.createElement('br'))
+
+	var roleButtonAdd = document.createElement('div')
+	roleButtonAdd.textContent = "Add Role"
+	roleButtonAdd.className = "addButton"
+
+	groupDiv.appendChild(roleButtonAdd)
+	groupDiv.appendChild(document.createElement('br'))
+	roleButtonAdd.addEventListener('click', addNewRole, false)
+}
+
+function handleEdit() {
+	var div = document.getElementById('accounts')
+	div.innerHTML = ''
+
+	var addSectionButton = document.createElement('div')
+	addSectionButton.className = 'addButton'
+	addSectionButton.textContent = 'Add Group'
+	addSectionButton.addEventListener('click', addGroup, false)
+
+	div.appendChild(addSectionButton)
+
+	browser.storage.local.get(['accounts', 'regionsEnabled'], items => {
+		Object.entries(items.accounts||[]).forEach(([account, roles]) => {
+			createEditSection(div, account, roles)
+		})
+	})
+	editLabel.style.display = "none"
+	cancelLabel.style.display = "block"
+	saveLabel.style.display = "block"
+}
+var edit = document.getElementById("edit")
+edit.addEventListener("click", handleEdit, false)
+
+function handleCancel() {
+	editLabel.style.display = "block"
+	cancelLabel.style.display = "none"
+	saveLabel.style.display = "none"
+	load()
+}
+var cancel = document.getElementById("cancel")
+cancel.addEventListener("click", handleCancel, false)
+
+
+function handleSave() {
+
+	function errorCheck(input) {
+		input.style.borderColor = "white"
+		if (input == null || !input.value.length) {
+			input.style.borderColor = "red"
+			error = true
+		}
+	}
+
+	var groups = document.querySelectorAll('div[class=group]')
+	var accounts = {}
+	var error = false
+
+	groups.forEach(group => {
+
+		groupInput = group.querySelector('input[name=group]')
+		errorCheck(groupInput)
+
+		accounts[groupInput.value] = []
+
+		group.querySelectorAll('div[class=role]').forEach(role => {
+
+			accountInput = role.querySelector('input[name=account]')
+			roleInput = role.querySelector('input[name=role]')
+			environmentInput = role.querySelector('input[name=environment]')
+			colorInput = role.querySelector('input[name=color]')
+
+			errorCheck(accountInput)
+			errorCheck(roleInput)
+			errorCheck(environmentInput)
+			errorCheck(colorInput)
+
+			accounts[groupInput.value].push({
+				account: accountInput.value,
+				role: roleInput.value,
+				environment: environmentInput.value,
+				color: colorInput.value,
+			})
+		})
+	})
+
+	if (error) {
+		alert('Error, some fields have failed validation. Please fix and try again')
+		return
+	}
+
+	browser.storage.local.set({
+		accounts: accounts
+	})
+}
+var save = document.getElementById("save")
+save.addEventListener("click", handleSave, false)
 
 
 function handleRegionClick() {
