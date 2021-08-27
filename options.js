@@ -181,33 +181,44 @@ function deleteDiv() {
 	this.parentElement.remove()
 }
 
-function addNewRole() {
-	groupDiv = this.parentElement
+function addRoleRow(groupDiv, role = {}, before) {
 
 	var roleDiv = document.createElement('div')
 	roleDiv.className = 'role'
-	groupDiv.insertBefore(roleDiv, this)
+
+	if (JSON.stringify(role) === '{}') {
+		groupDiv.insertBefore(roleDiv, before)
+	} else {
+		groupDiv.appendChild(roleDiv)
+	}
 
 	var inputAccount = document.createElement('input')
-	inputAccount.name = "account"
+	inputAccount.name = 'account'
 	inputAccount.type = "text"
+	inputAccount.placeholder = "Account ID"
+	if (role.account) inputAccount.value = role.account
 
 	var inputRole = document.createElement('input')
 	inputRole.name = 'role'
 	inputRole.type = "text"
-
+	inputRole.placeholder = "Role Name"
+	if (role.role) inputRole.value = role.role
 
 	var inputEnvironment = document.createElement('input')
-	inputEnvironment.name = "environment"
+	inputEnvironment.name = 'environment'
 	inputEnvironment.type = "text"
+	inputEnvironment.placeholder = "Description"
+	if (role.environment) inputEnvironment.value = role.environment
 
 	var inputColor = document.createElement('input')
-	inputColor.name = "color"
+	inputColor.name = 'color'
 	inputColor.type = "text"
+	inputColor.placeholder = "Icon Hex Color"
+	if (role.color) inputColor.value = role.color
 
 	var roleButtonDelete = document.createElement('div')
 	roleButtonDelete.textContent = "Remove Role"
-	roleButtonDelete.className = "deleteButton"
+	roleButtonDelete.className = 'deleteButton'
 	roleButtonDelete.addEventListener('click', deleteDiv, false)
 
 	roleDiv.appendChild(inputAccount)
@@ -218,73 +229,11 @@ function addNewRole() {
 	roleDiv.appendChild(document.createElement('br'))
 }
 
-function createEditSection(div, account, roles) {
+function addNewRole() {
+	addRoleRow(this.parentElement, {}, this)
+}
 
-	var groupDiv = document.createElement('div')
-	groupDiv.className = 'group'
-	div.appendChild(groupDiv)
-
-	groupDiv.appendChild(document.createElement('br'))
-
-	var group = document.createElement('input')
-	group.name = 'group'
-	group.type = "text"
-	group.value = account
-
-	var groupButtonDelete = document.createElement('div')
-	groupButtonDelete.textContent = "Remove Group"
-	groupButtonDelete.className = 'deleteButton'
-	groupButtonDelete.addEventListener('click', deleteDiv, false)
-
-
-	groupDiv.appendChild(group)
-	groupDiv.appendChild(groupButtonDelete)
-	groupDiv.appendChild(document.createElement('br'))
-
-	roles.forEach(role => {
-
-		var roleDiv = document.createElement('div')
-		roleDiv.className = 'role'
-		groupDiv.appendChild(roleDiv)
-
-
-		var inputAccount = document.createElement('input')
-		inputAccount.name = 'account'
-		inputAccount.type = "text"
-		inputAccount.placeholder = "Account ID"
-		inputAccount.value = role.account
-
-		var inputRole = document.createElement('input')
-		inputRole.name = 'role'
-		inputRole.type = "text"
-		inputRole.placeholder = "Role Name"
-		inputRole.value = role.role
-
-		var inputEnvironment = document.createElement('input')
-		inputEnvironment.name = 'environment'
-		inputEnvironment.type = "text"
-		inputEnvironment.placeholder = "Description"
-		inputEnvironment.value = role.environment
-
-		var inputColor = document.createElement('input')
-		inputColor.name = 'color'
-		inputColor.type = "text"
-		inputColor.placeholder = "Icon Hex Color"
-		inputColor.value = role.color
-
-		var roleButtonDelete = document.createElement('div')
-		roleButtonDelete.textContent = "Remove Role"
-		roleButtonDelete.className = 'deleteButton'
-		roleButtonDelete.addEventListener('click', deleteDiv, false)
-
-		roleDiv.appendChild(inputAccount)
-		roleDiv.appendChild(inputRole)
-		roleDiv.appendChild(inputEnvironment)
-		roleDiv.appendChild(inputColor)
-		roleDiv.appendChild(roleButtonDelete)
-		roleDiv.appendChild(document.createElement('br'))
-	})
-
+function addAddRoleButton(groupDiv) {
 	var roleButtonAdd = document.createElement('div')
 	roleButtonAdd.textContent = "Add Role"
 	roleButtonAdd.className = "addButton"
@@ -292,7 +241,17 @@ function createEditSection(div, account, roles) {
 	groupDiv.appendChild(roleButtonAdd)
 	groupDiv.appendChild(document.createElement('br'))
 	roleButtonAdd.addEventListener('click', addNewRole, false)
+}
 
+function createEditSection(div, account, roles) {
+
+	groupDiv = addGroupRow(div, account)
+
+	roles.forEach(role => {
+		addRoleRow(groupDiv, role)
+	})
+
+	addAddRoleButton(groupDiv)
 }
 
 var saveLabel = document.getElementById("saveLabel")
@@ -300,10 +259,16 @@ var cancelLabel = document.getElementById("cancelLabel")
 var editLabel = document.getElementById("editLabel")
 
 
-function addGroup() {
+function addGroupRow(div, groupName = '', before) {
+
 	var groupDiv = document.createElement('div')
 	groupDiv.className = 'group'
-	this.parentElement.insertBefore(groupDiv, this.nextSibling)
+
+	if (groupName === '') {
+		div.insertBefore(groupDiv, before)
+	} else {
+		div.appendChild(groupDiv)
+	}
 
 	groupDiv.appendChild(document.createElement('br'))
 
@@ -311,6 +276,7 @@ function addGroup() {
 	group.name = 'group'
 	group.type = "text"
 	group.placeholder = "Group name"
+	group.value = groupName
 
 	var groupButtonDelete = document.createElement('div')
 	groupButtonDelete.textContent = "Remove Group"
@@ -321,13 +287,12 @@ function addGroup() {
 	groupDiv.appendChild(groupButtonDelete)
 	groupDiv.appendChild(document.createElement('br'))
 
-	var roleButtonAdd = document.createElement('div')
-	roleButtonAdd.textContent = "Add Role"
-	roleButtonAdd.className = "addButton"
+	return groupDiv
+}
 
-	groupDiv.appendChild(roleButtonAdd)
-	groupDiv.appendChild(document.createElement('br'))
-	roleButtonAdd.addEventListener('click', addNewRole, false)
+function addGroup() {
+	groupDiv = addGroupRow(this.parentElement, '', this.nextSibling)
+	addAddRoleButton(groupDiv)
 }
 
 function handleEdit() {
