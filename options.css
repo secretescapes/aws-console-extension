@@ -44,11 +44,16 @@ a {
 
 input[type="text"] {
 	color: black;
-	border: 2px solid white;
+	border: 0;
 	margin: 2px 4px 2px 0;
 	height: 20px;
-	padding: 2px;
+	padding: 4px;
 	font-size: 14px;
+}
+
+input[name="color"] {
+	width: 150px;
+	border-right: 28px solid transparent;
 }
 
 .deleteButton {

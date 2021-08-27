@@ -8,10 +8,14 @@ const headers = ['Account', 'Role', 'Environment', 'Colour']
 
 var regions = document.getElementById("regions")
 
-function createRoleCol(tr, value) {
+function createRoleCol(tr, value, color=false) {
 	var td = document.createElement('td')
 	td.innerText = value
 	tr.appendChild(td)
+	if (color) {
+		td.style.fontFamily = "Courier New"
+		td.style.borderRight = `20px solid #${value}`
+	}
 }
 
 
@@ -57,7 +61,7 @@ function createSection(div, account, roles) {
 		createRoleCol(tbody_tr, role.account)
 		createRoleCol(tbody_tr, role.role)
 		createRoleCol(tbody_tr, role.environment)
-		createRoleCol(tbody_tr, role.color)
+		createRoleCol(tbody_tr, role.color, true)
 	})
 
 	var br = document.createElement('br')
@@ -181,6 +185,16 @@ function deleteDiv() {
 	this.parentElement.remove()
 }
 
+var isHex = /^([A-FZ0-9]{3}){1,2}$/i;
+
+function colorChange() {
+	if (isHex.exec(this.value)) {
+		this.style.borderColor = `#${this.value}`
+	} else {
+		this.style.borderColor = 'transparent'
+	}
+}
+
 function addRoleRow(groupDiv, role = {}, before) {
 
 	var roleDiv = document.createElement('div')
@@ -214,6 +228,8 @@ function addRoleRow(groupDiv, role = {}, before) {
 	inputColor.name = 'color'
 	inputColor.type = "text"
 	inputColor.placeholder = "Icon Hex Color"
+	inputColor.style.borderRight = `28px solid #${role.color}`
+	inputColor.addEventListener('input', colorChange, false)
 	if (role.color) inputColor.value = role.color
 
 	var roleButtonDelete = document.createElement('div')
@@ -331,9 +347,9 @@ cancel.addEventListener("click", handleCancel, false)
 function handleSave() {
 
 	function errorCheck(input) {
-		input.style.borderColor = "white"
+		input.style.outline = "white"
 		if (input == null || !input.value.length) {
-			input.style.borderColor = "red"
+			input.style.outline = "2px solid red"
 			error = true
 		}
 	}
@@ -360,6 +376,13 @@ function handleSave() {
 			errorCheck(roleInput)
 			errorCheck(environmentInput)
 			errorCheck(colorInput)
+
+			if (isHex.exec(colorInput.value)) {
+				colorInput.style.outline = "white"
+			} else {
+				colorInput.style.outline = "2px solid red"
+				error = true
+			}
 
 			accounts[groupInput.value].push({
 				account: accountInput.value,
