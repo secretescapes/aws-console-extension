@@ -8,23 +8,21 @@ body {
 	color: white;
 	text-align: left;
 	background-color: #232f3e;
-	width: 800px;
+	width: 500px;
 }
 
 h2 {
+	width: 100%;
 	border-bottom: 3px solid #ff8c00;
 }
 
-a {
-	color: #FF8C00;
+#regionsConfig,
+#accountsConfig {
+	margin-top: 20px;
 }
 
 #regionsConfig {
-	margin-top: 20px;
-}
-
-#accountsConfig {
-	margin-top: 20px;
+	margin-left: 10px;
 }
 
 input[type="text"] {
@@ -75,6 +73,18 @@ input[disabled][name="group"] {
 
 input[disabled][name="color"] {
 	width: 60px;
+}
+
+input[disabled][name="account"] {
+	width: 120px;
+}
+
+input[disabled][name="environment"] {
+	width: 130px;
+}
+
+.role {
+	margin-left: 10px;
 }
 
 .deleteButton {

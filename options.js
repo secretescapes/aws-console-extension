@@ -47,17 +47,17 @@ function loadRegions() {
 			'Cape Town | af-south-1',
 			'Hong Kong | ap-east-1',
 			'Mumbai | ap-south-1',
-			'Osaka | ap-northeast-3',
+			'Tokyo | ap-northeast-1',
 			'Seoul | ap-northeast-2',
+			'Osaka | ap-northeast-3',
 			'Singapore | ap-southeast-1',
 			'Sydney | ap-southeast-2',
-			'Tokyo | ap-northeast-1',
 			'Central | ca-central-1',
 			'Frankfurt | eu-central-1',
 			'Ireland | eu-west-1',
 			'London | eu-west-2',
-			'Milan | eu-south-1',
 			'Paris | eu-west-3',
+			'Milan | eu-south-1',
 			'Stockholm | eu-north-1',
 			'Bahrain | me-south-1',
 			'S\xE3o Paulo | sa-east-1'
@@ -75,11 +75,19 @@ function loadRegions() {
 			regionInput.addEventListener("click", handleRegionClick, false)
 			if (items.regions.includes(text)) regionInput.checked = true
 
-			var regionLabel = document.createElement('label')
-			regionLabel.textContent = r
 			regionsConfig.appendChild(regionInput)
-			regionsConfig.appendChild(regionLabel)
-			regionsConfig.appendChild(br)
+			for (x of r.split('|').reverse()) {
+				console.log(x.trim())
+				var regionLabel = document.createElement('label')
+				regionLabel.textContent = x.trim()
+				regionLabel.style.cssText = `
+					padding-left: 4px;
+					display: inline-block;
+					width: 120px;
+				`
+				regionsConfig.appendChild(regionLabel)
+				regionsConfig.appendChild(br)
+			}
 		}
 	})
 }
@@ -257,6 +265,10 @@ function handleEdit() {
 	})
 	document.querySelectorAll('input[type=text]').forEach(item => {
 		item.disabled = null
+	})
+
+	document.querySelectorAll('div[class=role]').forEach(item => {
+		item.style.marginLeft = 0
 	})
 
 	regions.style.display = "none"
