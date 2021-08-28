@@ -264,10 +264,6 @@ function handleEdit() {
 		item.disabled = null
 	})
 
-	document.querySelectorAll('div[class=role]').forEach(item => {
-		item.style.marginLeft = 0
-	})
-
 	regions.style.display = "none"
 	downloadJSONLabel.style.display = "none"
 	uploadJSONLabel.style.display = "none"

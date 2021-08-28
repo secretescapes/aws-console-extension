@@ -83,10 +83,6 @@ input[disabled][name="description"] {
 	width: 130px;
 }
 
-.role {
-	margin-left: 10px;
-}
-
 .deleteButton {
 	font-family: Arial, Helvetica, sans-serif;
 	background-color: transparent;

@@ -237,6 +237,7 @@ filtersDiv.style.cssText = `
 	flex-wrap: wrap;
 	border-bottom: 1px solid grey;
 	padding: 10px;
+	min-height: 38px;
 `
 
 document.body.prepend(panel)
