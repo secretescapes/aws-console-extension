@@ -20,7 +20,10 @@
 
 	"content_scripts": [
 		{
-			"matches": ["*://*.console.aws.amazon.com/*"],
+			"matches": [
+				"*://*.console.aws.amazon.com/*",
+				"*://phd.aws.amazon.com/*"
+			],
 			"js": ["content.js"]
 		}
 	],
