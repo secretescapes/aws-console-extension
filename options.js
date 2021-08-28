@@ -4,8 +4,6 @@ if (typeof browser === "undefined") {
 	var browser = chrome
 }
 
-const headers = ['Account', 'Role', 'Environment', 'Colour']
-
 var isHex = /^([A-FZ0-9]{3}){1,2}$/i;
 
 var regions = document.getElementById("regions")
@@ -119,10 +117,10 @@ function addRoleRow(groupDiv, role = {}, before) {
 	inputRole.type = "text"
 	inputRole.placeholder = "Role Name"
 
-	var inputEnvironment = document.createElement('input')
-	inputEnvironment.name = 'environment'
-	inputEnvironment.type = "text"
-	inputEnvironment.placeholder = "Description"
+	var inputDescription = document.createElement('input')
+	inputDescription.name = 'description'
+	inputDescription.type = "text"
+	inputDescription.placeholder = "Description"
 
 	var inputColor = document.createElement('input')
 	inputColor.name = 'color'
@@ -148,8 +146,8 @@ function addRoleRow(groupDiv, role = {}, before) {
 		inputRole.value = role.role
 		inputRole.disabled = "disabled"
 
-		inputEnvironment.value = role.environment
-		inputEnvironment.disabled = "disabled"
+		inputDescription.value = role.description
+		inputDescription.disabled = "disabled"
 
 		inputColor.value = role.color
 		inputColor.disabled = "disabled"
@@ -157,7 +155,7 @@ function addRoleRow(groupDiv, role = {}, before) {
 
 	roleDiv.appendChild(inputAccount)
 	roleDiv.appendChild(inputRole)
-	roleDiv.appendChild(inputEnvironment)
+	roleDiv.appendChild(inputDescription)
 	roleDiv.appendChild(inputColor)
 	roleDiv.appendChild(roleButtonDelete)
 	roleDiv.appendChild(document.createElement('br'))
@@ -309,12 +307,12 @@ function handleSave() {
 
 			accountInput = role.querySelector('input[name=account]')
 			roleInput = role.querySelector('input[name=role]')
-			environmentInput = role.querySelector('input[name=environment]')
+			descriptionInput = role.querySelector('input[name=description]')
 			colorInput = role.querySelector('input[name=color]')
 
 			errorCheck(accountInput)
 			errorCheck(roleInput)
-			errorCheck(environmentInput)
+			errorCheck(descriptionInput)
 			errorCheck(colorInput)
 
 			if (isHex.exec(colorInput.value)) {
@@ -327,7 +325,7 @@ function handleSave() {
 			accounts[groupInput.value].push({
 				account: accountInput.value,
 				role: roleInput.value,
-				environment: environmentInput.value,
+				description: descriptionInput.value,
 				color: colorInput.value,
 			})
 		})

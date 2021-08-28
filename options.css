@@ -46,7 +46,7 @@ input[name="role"] {
 	width: 100px;
 }
 
-input[name="environment"] {
+input[name="description"] {
 	width: 150px;
 }
 
@@ -79,7 +79,7 @@ input[disabled][name="account"] {
 	width: 120px;
 }
 
-input[disabled][name="environment"] {
+input[disabled][name="description"] {
 	width: 130px;
 }
 

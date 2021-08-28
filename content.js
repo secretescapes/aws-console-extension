@@ -39,7 +39,7 @@ function checkRegion(regions) {
 
 function addRole(div, account, roleDetails) {
 
-	var title = `${roleDetails.role}@${account}-${roleDetails.environment}`
+	var title = `${roleDetails.role}@${account}-${roleDetails.description}`
 
 	var accountRole = recentRole.cloneNode(true)
 	accountRole.id = "awsc-recent-role-1"
@@ -106,8 +106,6 @@ function generateFilters(filters) {
 	var filtersList = [
 		"role:admin",
 		"role:dev",
-		"env:production",
-		"env:staging"
 	]
 
 	for (filter of filtersList) {
@@ -137,7 +135,7 @@ function generateFilters(filters) {
 	}
 }
 
-function generate(accounts, roleFilters, envFilters) {
+function generate(accounts, roleFilters) {
 
 	flex.innerHTML = ''
 
@@ -159,7 +157,6 @@ function generate(accounts, roleFilters, envFilters) {
 		for (var role in accounts[account]) {
 			var data = accounts[account][role]
 			if (roleFilters.length && !roleFilters.includes(`role:${data.role}`)) continue
-			if (envFilters.length && !envFilters.includes(`env:${data.environment}`)) continue
 			addRole(div, account, data)
 		}
 	}
@@ -182,7 +179,6 @@ function load() {
 		generate(
 			res.accounts,
 			res.filters.filter((v,i,a) => { return v.includes("role:")}),
-			res.filters.filter((v,i,a) => { return v.includes("env:")})
 		)
 		generateFilters(res.filters)
 	})
