@@ -11,26 +11,33 @@
 <body>
 	<h1>AWS Console Extension Options</h1>
 
-	<h2>Regions</h2>
-
-	<label class="regionSwitch">Enable Region Warning</label>
-	<input id="regionsEnabled" type="checkbox">
-	<div id="regions"></div>
-
-	<h2>Accounts</h2>
-
-	<div style="display: flex">
-		<label class="button" for="download">Download</label>
-		<input type="button" id="download" style="display: none;">
-
-		<label class="button" for="picker">Upload</label>
-		<input type="file" id="picker" style="display: none;">
-
-		<label class="button" for="reset">Reset</label>
-		<input type="button" id="reset" style="display: none;">
+	<div id="regions">
+		<h2>Regions</h2>
+		<label class="regionSwitch">Region Warning</label>
+		<input id="regionsEnabled" type="checkbox">
+		<div id="regionsConfig"></div>
 	</div>
 
-	<div id="accounts"></div>
+	<div id="accounts">
+		<h2>Accounts</h2>
+		<div style="display: flex">
+			<label class="button" id="downloadJSONLabel" for="downloadJSON">Download JSON</label>
+			<input type="button" id="downloadJSON" style="display: none;">
+
+			<label class="button" id="uploadJSONLabel" for="uploadJSON">Upload JSON</label>
+			<input type="file" id="uploadJSON" style="display: none;">
+
+			<label class="button" id="editLabel" for="edit">Edit</label>
+			<input type="button" id="edit" style="display: none;">
+
+			<label class="button" id="saveLabel" for="save" style="display: none;">Save</label>
+			<input type="button" id="save" style="display: none;">
+
+			<label class="button" id="cancelLabel" for="cancel" style="display: none;">Cancel</label>
+			<input type="button" id="cancel" style="display: none;">
+		</div>
+		<div id="accountsConfig"></div>
+	</div>
 
 	<script src="options.js"></script>
 </body>

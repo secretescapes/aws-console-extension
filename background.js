@@ -16,7 +16,6 @@ browser.commands.onCommand.addListener((command) => {
 	}
 })
 
-
 browser.runtime.onMessage.addListener((message) => {
 	switch (message.action) {
 		case "openOptionsPage":
@@ -26,3 +25,5 @@ browser.runtime.onMessage.addListener((message) => {
 			break;
 	}
 });
+
+browser.browserAction.onClicked.addListener(openOptionsPage)

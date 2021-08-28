@@ -5,37 +5,106 @@ body {
 	font-size: 16px;
 	font-weight: 400;
 	line-height: 1;
-	color: #cecece;
+	color: white;
 	text-align: left;
 	background-color: #232f3e;
-	min-width: 800px;
-}
-
-@-moz-document url-prefix() {
-	body {
-		min-width: auto;
-	}
-}
-
-h1,
-h2 {
-	color: #FFF;
+	width: 500px;
 }
 
 h2 {
+	width: 100%;
+	border-bottom: 3px solid #ff8c00;
+}
+
+#regionsConfig,
+#accountsConfig {
+	margin-top: 20px;
+}
+
+#regionsConfig {
+	margin-left: 10px;
+}
+
+input[type="text"] {
+	color: black;
+	border: 0;
+	margin: 2px 4px 2px 0;
+	height: 20px;
+	padding: 4px;
+	font-size: 14px;
+}
+
+input[name="group"] {
+	width: 100px;
+}
+
+input[name="account"] {
+	width: 100px;
+}
+
+input[name="role"] {
+	width: 100px;
+}
+
+input[name="description"] {
+	width: 150px;
+}
+
+input[name="color"] {
+	width: 50px;
+	border-right: 28px solid transparent;
+	font-family: Monospace;
+}
+
+input[disabled] {
+	width: 100px;
+	background-color: #232f3e;
+	color: white;
+}
+
+input[disabled][name="group"] {
+	display: block;
+	font-size: 1.5em;
+	margin-bottom: 5px;
+	font-weight: bold;
+	width: 100%;
 	border-bottom: 1px solid #ff8c00;
 }
 
-table {
+input[disabled][name="color"] {
+	width: 60px;
 }
 
-a {
-	color: #FF8C00;
+input[disabled][name="account"] {
+	width: 120px;
 }
 
+input[disabled][name="description"] {
+	width: 130px;
+}
 
-#regions {
-	margin-top: 20px;
+.deleteButton {
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: transparent;
+	color: red;
+	display: none;
+	margin: 4px;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.addButton {
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: #4caf50;
+	color: white;
+	display: none;
+	margin: 4px 0 10px 0;
+	vertical-align: middle;
+	cursor: pointer;
+	width: 460px;
+	text-align: center;
+	padding: 6px;
+	font-weight: bold;
 }
 
 .button {
@@ -44,7 +113,8 @@ a {
 	color: white;
 	font-family: "Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
 	font-size: 14px;
-	margin-right: 10px
+	margin-right: 10px;
+	cursor: pointer;
 }
 
 .button-text {

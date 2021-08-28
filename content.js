@@ -39,7 +39,7 @@ function checkRegion(regions) {
 
 function addRole(div, account, roleDetails) {
 
-	var title = `${roleDetails.role}@${account}-${roleDetails.environment}`
+	var title = `${roleDetails.role}@${account}-${roleDetails.description}`
 
 	var accountRole = recentRole.cloneNode(true)
 	accountRole.id = "awsc-recent-role-1"
@@ -99,18 +99,11 @@ function applyFilter() {
 
 }
 
-function generateFilters(filters) {
+function generateFilters(filters, roleFilterList) {
 
 	filtersDiv.innerHTML = ''
 
-	var filtersList = [
-		"role:admin",
-		"role:dev",
-		"env:production",
-		"env:staging"
-	]
-
-	for (filter of filtersList) {
+	for (filter of roleFilterList) {
 		var filterLabel = document.createElement("label")
 		filterLabel.setAttribute("for", filter)
 		filterLabel.textContent = filter
@@ -122,6 +115,7 @@ function generateFilters(filters) {
 			font-family: ${fontFamily};
 			font-size: 14px;
 			border-radius: 16px;
+			cursor: pointer;
 		`
 		if (filters.includes(filter)) filterLabel.style.borderColor = "#ff8c00"
 
@@ -137,7 +131,7 @@ function generateFilters(filters) {
 	}
 }
 
-function generate(accounts, roleFilters, envFilters) {
+function generate(accounts, roleFilters) {
 
 	flex.innerHTML = ''
 
@@ -158,8 +152,7 @@ function generate(accounts, roleFilters, envFilters) {
 
 		for (var role in accounts[account]) {
 			var data = accounts[account][role]
-			if (roleFilters.length && !roleFilters.includes(`role:${data.role}`)) continue
-			if (envFilters.length && !envFilters.includes(`env:${data.environment}`)) continue
+			if (roleFilters.length && !roleFilters.includes(data.role)) continue
 			addRole(div, account, data)
 		}
 	}
@@ -177,14 +170,10 @@ function togglePanel() {
 }
 
 function load() {
-	browser.storage.local.get(['accounts', 'filters'], (res) => {
-		res.filters = res.filters || []
-		generate(
-			res.accounts,
-			res.filters.filter((v,i,a) => { return v.includes("role:")}),
-			res.filters.filter((v,i,a) => { return v.includes("env:")})
-		)
-		generateFilters(res.filters)
+	browser.storage.local.get(['accounts', 'filters', 'roleFilterList'], items => {
+		items.filters = items.filters || []
+		generate(items.accounts,items.filters)
+		generateFilters(items.filters, items.roleFilterList)
 	})
 }
 
@@ -239,6 +228,7 @@ optionsLabel.style.cssText = `
 	color: white;
 	font-family: ${fontFamily};
 	font-size: 14px;
+	cursor: pointer;
 `
 
 var filtersDiv = document.createElement("div")
@@ -247,6 +237,7 @@ filtersDiv.style.cssText = `
 	flex-wrap: wrap;
 	border-bottom: 1px solid grey;
 	padding: 10px;
+	min-height: 38px;
 `
 
 document.body.prepend(panel)
