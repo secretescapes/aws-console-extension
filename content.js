@@ -99,16 +99,11 @@ function applyFilter() {
 
 }
 
-function generateFilters(filters) {
+function generateFilters(filters, roleFilterList) {
 
 	filtersDiv.innerHTML = ''
 
-	var filtersList = [
-		"role:admin",
-		"role:dev",
-	]
-
-	for (filter of filtersList) {
+	for (filter of roleFilterList) {
 		var filterLabel = document.createElement("label")
 		filterLabel.setAttribute("for", filter)
 		filterLabel.textContent = filter
@@ -120,6 +115,7 @@ function generateFilters(filters) {
 			font-family: ${fontFamily};
 			font-size: 14px;
 			border-radius: 16px;
+			cursor: pointer;
 		`
 		if (filters.includes(filter)) filterLabel.style.borderColor = "#ff8c00"
 
@@ -156,7 +152,7 @@ function generate(accounts, roleFilters) {
 
 		for (var role in accounts[account]) {
 			var data = accounts[account][role]
-			if (roleFilters.length && !roleFilters.includes(`role:${data.role}`)) continue
+			if (roleFilters.length && !roleFilters.includes(data.role)) continue
 			addRole(div, account, data)
 		}
 	}
@@ -174,13 +170,10 @@ function togglePanel() {
 }
 
 function load() {
-	browser.storage.local.get(['accounts', 'filters'], (res) => {
-		res.filters = res.filters || []
-		generate(
-			res.accounts,
-			res.filters.filter((v,i,a) => { return v.includes("role:")}),
-		)
-		generateFilters(res.filters)
+	browser.storage.local.get(['accounts', 'filters', 'roleFilterList'], items => {
+		items.filters = items.filters || []
+		generate(items.accounts,items.filters)
+		generateFilters(items.filters, items.roleFilterList)
 	})
 }
 
@@ -235,6 +228,7 @@ optionsLabel.style.cssText = `
 	color: white;
 	font-family: ${fontFamily};
 	font-size: 14px;
+	cursor: pointer;
 `
 
 var filtersDiv = document.createElement("div")

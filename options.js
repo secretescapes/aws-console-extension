@@ -75,7 +75,6 @@ function loadRegions() {
 
 			regionsConfig.appendChild(regionInput)
 			for (x of r.split('|').reverse()) {
-				console.log(x.trim())
 				var regionLabel = document.createElement('label')
 				regionLabel.textContent = x.trim()
 				regionLabel.style.cssText = `
@@ -336,10 +335,7 @@ function handleSave() {
 		return
 	}
 
-	browser.storage.local.set({
-		timestamp: Date.now(),
-		accounts: accounts
-	})
+	saveAccounts(accounts)
 }
 var save = document.getElementById("save")
 save.addEventListener("click", handleSave, false)
@@ -367,12 +363,25 @@ function handleDownloadJSON() {
 var downloadJSON = document.getElementById("downloadJSON")
 downloadJSON.addEventListener("click", handleDownloadJSON, false)
 
+function saveAccounts(accounts) {
+	var roleFilterList = new Set()
+	Object.entries(accounts).forEach(([group, roles]) => {
+		for (role of roles) {
+			roleFilterList.add(role.role)
+		}
+	})
+
+	browser.storage.local.set({
+		timestamp: Date.now(),
+		accounts: accounts,
+		roleFilterList: Array.from(roleFilterList)
+	})
+}
+
 function handleUploadJSON() {
 	var reader = new FileReader()
 	reader.onload = (e) => {
-		browser.storage.local.set({
-			accounts: JSON.parse(e.target.result)
-		})
+		saveAccounts(JSON.parse(e.target.result))
 	}
 	reader.readAsText(this.files[0], "UTF-8")
 }
