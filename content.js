@@ -39,7 +39,7 @@ function checkRegion(regions) {
 
 function addRole(div, account, roleDetails) {
 
-	var title = `${roleDetails.role}@${account}-${roleDetails.description}`
+	var title = `${roleDetails.role}@${account}-${roleDetails.description}`.replace(/-*\s*$/, '')
 
 	var accountRole = recentRole.cloneNode(true)
 	accountRole.id = "awsc-recent-role-1"

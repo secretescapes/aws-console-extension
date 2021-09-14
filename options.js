@@ -307,7 +307,6 @@ function handleSave() {
 
 			errorCheck(accountInput)
 			errorCheck(roleInput)
-			errorCheck(descriptionInput)
 			errorCheck(colorInput)
 
 			if (isHex.exec(colorInput.value)) {
