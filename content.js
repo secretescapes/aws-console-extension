@@ -27,6 +27,22 @@ var cssWhite = `
 	color: red;
 `
 
+function recentRoleWarning() {
+	var warning = document.createElement("div")
+	warning.textContent = "There must be at least one item in the Role History in order for this functionality to work"
+	warning.style.cssText = `
+		font-family: "Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
+		font-size: 15px;
+		padding: 10px;
+		color: white;
+		font-weight: bold;
+		width: calc(100% - 105px);
+		text-align: center;
+	`
+
+	filtersDiv.appendChild(warning)
+}
+
 function checkRegion(regions) {
 	var currentRegion = document.querySelector("span[data-testid=awsc-nav-regions-menu-button] > span")
 	if (!regions.includes(currentRegion.textContent)) {
@@ -170,8 +186,23 @@ function togglePanel() {
 }
 
 function load() {
-	browser.storage.local.get(['accounts', 'filters', 'roleFilterList'], items => {
+	browser.storage.local.get([
+		'accounts',
+		'filters',
+		'roleFilterList',
+		'regionsEnabled',
+		'regions'
+	], items => {
+
+		if (items.regionsEnabled && items.regions) checkRegion(items.regions)
+
 		items.filters = items.filters || []
+
+		if (!recentRole) {
+			recentRoleWarning()
+			return
+		}
+
 		generate(items.accounts,items.filters)
 		generateFilters(items.filters, items.roleFilterList)
 	})
@@ -247,9 +278,6 @@ panel.appendChild(optionsLabel)
 panel.appendChild(filtersDiv)
 panel.appendChild(flex)
 
-browser.storage.local.get(['regionsEnabled', 'regions'], items => {
-	if (items.regionsEnabled && items.regions) checkRegion(items.regions)
-})
 
 browser.storage.onChanged.addListener(() => {
 	load()
