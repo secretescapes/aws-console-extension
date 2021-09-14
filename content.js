@@ -28,6 +28,9 @@ var cssWhite = `
 `
 
 function recentRoleWarning() {
+
+	filtersDiv.innerHTML = ''
+
 	var warning = document.createElement("div")
 	warning.textContent = "There must be at least one item in the Role History in order for this functionality to work"
 	warning.style.cssText = `
