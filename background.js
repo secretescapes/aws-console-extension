@@ -8,11 +8,15 @@ function openOptionsPage(){
 	browser.runtime.openOptionsPage();
 }
 
+function togglePanel() {
+	browser.tabs.executeScript({code: `
+		document.getElementById('awsconsoleextensionrole-button').click()
+	`})
+}
+
 browser.commands.onCommand.addListener((command) => {
 	if (command === 'toggle-panel') {
-		browser.tabs.executeScript({code: `
-			document.getElementById('awsconsoleextensionrole-button').click()
-		`})
+		togglePanel()
 	}
 })
 
@@ -26,4 +30,4 @@ browser.runtime.onMessage.addListener((message) => {
 	}
 });
 
-browser.browserAction.onClicked.addListener(openOptionsPage)
+browser.browserAction.onClicked.addListener(togglePanel)
