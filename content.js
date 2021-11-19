@@ -295,7 +295,6 @@ filtersDiv.style.cssText = `
 `
 
 document.body.prepend(panel)
-
 panel.appendChild(optionsButton)
 panel.appendChild(optionsLabel)
 panel.appendChild(filtersDiv)
@@ -313,4 +312,9 @@ var navbar = document.querySelector('a[title="CloudShell"]')
 if (navbar == null) {
 	navbar = document.querySelector('button[data-testid=awsc-nav-more-menu]').parentNode
 }
+
+if (!document.querySelector('button[data-testid=aws-services-list-button]').parentNode.parentNode.classList[0].startsWith('globalNav')) {
+	icon.style.cssText = "padding: 10px;"
+}
+
 navbar.parentNode.prepend(iconDiv)
