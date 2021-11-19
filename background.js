@@ -10,7 +10,12 @@ function openOptionsPage(){
 
 function togglePanel() {
 	browser.tabs.executeScript({code: `
-		document.getElementById('awsconsoleextensionrole-button').click()
+		panel = document.getElementById('awsconsoleextensionrole-panel')
+		if (panel.style.display == "block") {
+			panel.style.display = "none"
+		} else {
+			panel.style.display = "block"
+		}
 	`})
 }
 
