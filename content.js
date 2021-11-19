@@ -220,7 +220,7 @@ style.innerHTML = `
 	}
 
 	.aws-ce-mask:hover {
-		content:url(${comedy});
+		filter: grayscale(100%) brightness(50%) sepia(100%)  saturate(700%) contrast(1);
 	}
 
 	#awsconsoleextensionrole-panel {
