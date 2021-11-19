@@ -4,7 +4,6 @@ if (typeof browser === "undefined") {
 	var browser = chrome
 }
 
-var navbar = document.getElementById('awsc-nav-header').lastChild
 var recentMenu = document.getElementById("awsc-username-menu-recent-roles")
 var recentRole = document.getElementById("awsc-recent-role-0")
 
@@ -211,30 +210,51 @@ function load() {
 	})
 }
 
+var style = document.createElement("style")
+style.type = "text/css"
+style.innerHTML = `
+	.aws-ce-mask {
+		cursor: pointer;
+		width: 16px;
+		height: 16px;
+	}
+
+	.aws-ce-mask:hover {
+		content:url(${comedy});
+	}
+
+	#awsconsoleextensionrole-panel {
+		display: none;
+		position: absolute;
+		background: #232f3e;
+		border-top: 1px solid #545b64;
+		width: 100%;
+		top: 40px;
+		z-index: 9999;
+		padding-bottom: 20px;
+		min-height: 40px;
+	}
+`
+
+document.getElementsByTagName('head')[0].appendChild(style);
+
+
 var icon = document.createElement("img")
 icon.src = tragedy
 icon.id = "awsconsoleextensionrole-button"
 icon.title = "AWS Console Extension Roles"
 icon.addEventListener('click', togglePanel, false)
-icon.style.cssText = `
-	cursor: pointer;
-	padding: 10px;
-	width: 16px;
-`
+icon.classList.add("aws-ce-mask")
+
+var iconDiv = document.createElement("div")
+iconDiv.classList.add("globalNav-034")
+iconDiv.classList.add("globalNav-0399")
+iconDiv.classList.add("globalNav-031")
+iconDiv.classList.add("globalNav-032")
+
 
 var panel = document.createElement("div")
 panel.id = 'awsconsoleextensionrole-panel'
-panel.style.cssText = `
-	display: none;
-	position: absolute;
-	background: #232f3e;
-	border-top: 1px solid #545b64;
-	width: 100%;
-	top: 40px;
-	z-index: 9999;
-	padding-bottom: 20px;
-	min-height: 40px;
-`
 
 var flex = document.createElement("div")
 flex.style.cssText = `
@@ -275,7 +295,7 @@ filtersDiv.style.cssText = `
 `
 
 document.body.prepend(panel)
-navbar.prepend(icon)
+
 panel.appendChild(optionsButton)
 panel.appendChild(optionsLabel)
 panel.appendChild(filtersDiv)
@@ -287,3 +307,10 @@ browser.storage.onChanged.addListener(() => {
 })
 
 load()
+
+iconDiv.appendChild(icon)
+var navbar = document.querySelector('a[title="CloudShell"]')
+if (navbar == null) {
+	navbar = document.querySelector('button[data-testid=awsc-nav-more-menu]').parentNode
+}
+navbar.parentNode.prepend(iconDiv)
