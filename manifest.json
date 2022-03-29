@@ -1,5 +1,5 @@
 {
-	"manifest_version": 2,
+	"manifest_version": 3,
 	"name": "aws-console-extension",
 	"version": "0.3.1",
 
@@ -7,7 +7,7 @@
 
 	"description": "Allows quick switching between AWS accounts and roles along with other useful features.",
 
-	"browser_action": {
+	"action": {
 		"default_title": "AWS Console Extension"
 	},
 
@@ -29,14 +29,19 @@
 	],
 
 	"background": {
-		"scripts": ["background.js"],
-		"persistent": false
+		"service_works": "background.js"
 	},
 
-	"web_accessible_resources": [
-		"images/comedy.png",
-		"images/tragedy.png"
-	],
+	"web_accessible_resources": [{
+		"resources": [
+			"images/comedy.png",
+			"images/tragedy.png"
+		],
+		"matches": [
+			"*://*.console.aws.amazon.com/*",
+			"*://phd.aws.amazon.com/*"
+		]
+	}],
 
 	"options_ui": {
 		"page": "options.html",
