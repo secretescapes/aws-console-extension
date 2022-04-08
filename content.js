@@ -31,7 +31,7 @@ function recentRoleWarning() {
 	filtersDiv.innerHTML = ''
 
 	var warning = document.createElement("div")
-	warning.textContent = "There must be at least one item in the Role History in order for this functionality to work"
+	warning.textContent = "There are not items in your Role History, please go to Options and click a switch icon to manually switch to enable this functionality."
 	warning.style.cssText = `
 		font-family: "Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
 		font-size: 15px;
