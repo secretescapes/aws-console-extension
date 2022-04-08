@@ -8,7 +8,7 @@ body {
 	color: white;
 	text-align: left;
 	background-color: #232f3e;
-	width: 500px;
+	width: 535px;
 }
 
 h2 {
@@ -125,4 +125,9 @@ input[disabled][name="description"] {
 	font-size: 14px;
 	font-weight: bold;
 	margin-right: 10px;
+}
+
+.switcher {
+	color: #ff8c00;
+	text-decoration: none;
 }

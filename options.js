@@ -133,6 +133,11 @@ function addRoleRow(groupDiv, role = {}, before) {
 	roleButtonDelete.className = 'deleteButton'
 	roleButtonDelete.addEventListener('click', deleteDiv, false)
 
+	var switcher = document.createElement('a')
+	switcher.name = 'switcher'
+	switcher.className = "switcher"
+	switcher.textContent = "⇄"
+
 	if (JSON.stringify(role) === '{}') {
 		groupDiv.insertBefore(roleDiv, before)
 		roleButtonDelete.style.display = "inline-block"
@@ -150,6 +155,10 @@ function addRoleRow(groupDiv, role = {}, before) {
 
 		inputColor.value = role.color
 		inputColor.disabled = "disabled"
+
+		var title = `${role.role}@${groupDiv.name}-${role.description}`.replace(/-*\s*$/, '')
+		switcher.href = `https://signin.aws.amazon.com/switchrole?roleName=${role.role}&account=${role.account}&displayName=${title}`
+		switcher.title = `Switch to: ${title}`
 	}
 
 	roleDiv.appendChild(inputAccount)
@@ -157,6 +166,7 @@ function addRoleRow(groupDiv, role = {}, before) {
 	roleDiv.appendChild(inputDescription)
 	roleDiv.appendChild(inputColor)
 	roleDiv.appendChild(roleButtonDelete)
+	roleDiv.appendChild(switcher)
 	roleDiv.appendChild(document.createElement('br'))
 }
 
@@ -193,6 +203,7 @@ function addGroupRow(div, groupName = '', before) {
 
 	var groupDiv = document.createElement('div')
 	groupDiv.className = 'group'
+	groupDiv.name = groupName
 
 	groupDiv.appendChild(document.createElement('br'))
 
@@ -262,6 +273,9 @@ function handleEdit() {
 	})
 	document.querySelectorAll('input[type=text]').forEach(item => {
 		item.disabled = null
+	})
+	document.querySelectorAll('a[class=switcher]').forEach(item => {
+		item.style.display = 'none'
 	})
 
 	regions.style.display = "none"

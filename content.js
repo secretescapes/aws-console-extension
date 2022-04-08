@@ -31,7 +31,7 @@ function recentRoleWarning() {
 	filtersDiv.innerHTML = ''
 
 	var warning = document.createElement("div")
-	warning.textContent = "There must be at least one item in the Role History in order for this functionality to work"
+	warning.textContent = "There are not items in your Role History, please go to Options and click a switch icon to manually switch to enable this functionality."
 	warning.style.cssText = `
 		font-family: "Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
 		font-size: 15px;
@@ -234,6 +234,15 @@ style.innerHTML = `
 		padding-bottom: 20px;
 		min-height: 40px;
 	}
+
+	.awsce-globalNav {
+		color: #FFFFFF;
+		display: inline-flex;
+		padding: 9px;
+		align-items: center;
+		flex-shrink: 0;
+		justify-content: center;
+	}
 `
 
 document.getElementsByTagName('head')[0].appendChild(style);
@@ -247,10 +256,9 @@ icon.addEventListener('click', togglePanel, false)
 icon.classList.add("aws-ce-mask")
 
 var iconDiv = document.createElement("div")
-iconDiv.classList.add("globalNav-034")
-iconDiv.classList.add("globalNav-0399")
-iconDiv.classList.add("globalNav-031")
-iconDiv.classList.add("globalNav-032")
+iconDiv.classList.add("globalNav-0385")
+iconDiv.classList.add("awsce-globalNav")
+iconDiv.classList.add("globalNav-035")
 
 
 var panel = document.createElement("div")
@@ -261,6 +269,8 @@ flex.style.cssText = `
 	display: flex;
 	width: 100%;
 	flex-wrap: wrap;
+	padding-left: 20px;
+	padding-right: 20px;
 `
 var optionsButton = document.createElement("input")
 optionsButton.type = "button"
