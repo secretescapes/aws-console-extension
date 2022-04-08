@@ -55,6 +55,12 @@
 				"default": "Ctrl+Y"
 			},
 			"description": "Toggle the role switch panel"
+		},
+		"role-search": {
+			"suggested_key": {
+				"default": "Ctrl+0"
+			},
+			"description": "Toggle the role switch searcher"
 		}
 	}
 }

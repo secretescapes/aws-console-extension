@@ -265,6 +265,7 @@ var panel = document.createElement("div")
 panel.id = 'awsconsoleextensionrole-panel'
 
 var flex = document.createElement("div")
+flex.id = "awsce-role-div"
 flex.style.cssText = `
 	display: flex;
 	width: 100%;
@@ -326,5 +327,62 @@ if (navbar == null) {
 if (!document.querySelector('button[data-testid=aws-services-list-button]').parentNode.parentNode.classList[0].startsWith('globalNav')) {
 	icon.style.cssText = "padding: 10px;"
 }
+
+
+var grey = document.createElement("div")
+grey.id = "awsce-grey"
+grey.style.cssText = `
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.75);
+	z-index: 9999;
+	display: none;
+}
+`
+var searchbox = document.createElement("input")
+searchbox.id = "awsce-search-box"
+searchbox.style.cssText = `
+	height: 40px;
+	width: 100%;
+	text-align: center;
+	font-family: ${fontFamily};
+`
+var search = document.createElement("div")
+search.id = "awsce-search"
+search.style.cssText = `
+	margin: auto;
+	margin-top: 50px;
+	width: 40%;
+	background: white;
+	padding: 30px;
+}
+`
+
+function doSearch() {
+
+	terms = document.getElementById("awsce-search-box").value.split(/\s+/)
+	console.log(terms)
+
+	if (terms) {
+		results = document.querySelectorAll("#awsce-role-div input[type=submit]")
+		for (term of terms) {
+			console.log(term)
+			results = Array.prototype.filter.call(results, item => item.id.includes(term))
+		}
+		console.log(results)
+	}
+}
+
+searchbox.addEventListener("keyup", event => {
+	console.log(event)
+	doSearch()
+})
+
+document.body.prepend(grey)
+grey.append(search)
+search.append(searchbox)
 
 navbar.parentNode.prepend(iconDiv)
