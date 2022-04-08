@@ -20,7 +20,6 @@ function togglePanel() {
 }
 
 function toggleSearch() {
-	console.log('role-search')
 	browser.tabs.executeScript({code: `
 		grey = document.getElementById('awsce-grey')
 		search = document.getElementById('awsce-search')

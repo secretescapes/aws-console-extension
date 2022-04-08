@@ -58,7 +58,7 @@
 		},
 		"role-search": {
 			"suggested_key": {
-				"default": "Ctrl+0"
+				"default": "Ctrl+M"
 			},
 			"description": "Toggle the role switch searcher"
 		}
