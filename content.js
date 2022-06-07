@@ -243,6 +243,56 @@ style.innerHTML = `
 		flex-shrink: 0;
 		justify-content: center;
 	}
+
+	.awsce-search-results {
+		margin: 0px;
+		padding: 6px;
+		font-family: ${fontFamily};
+		text-align: center;
+	}
+	.awsce-search-results-current {
+		border-bottom: 1px solid #232f3e;
+		border-top: 1px solid #232f3e;
+		background: white;
+		padding: 4px;
+		font-weight: bold;
+	}
+
+	#awsce-grey {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0,0,0,0.75);
+		z-index: 9999;
+		display: none;
+	}
+
+	#awsce-search {
+		margin: auto;
+		margin-top: 50px;
+		width: 600px;
+		background: #232f3e;
+		padding: 30px;
+	}
+
+	#awsce-search-box {
+		height: 40px;
+		width: 592px;
+		background: white;
+		text-align: center;
+		font-family: ${fontFamily};
+	}
+
+	#awsce-search-results {
+		border: 30px solid #232f3e;
+		border-top: 0;
+		margin: -1px auto;
+		width: 600px;
+		background: white;
+		display: none;
+	}
 `
 
 document.getElementsByTagName('head')[0].appendChild(style);
@@ -265,6 +315,7 @@ var panel = document.createElement("div")
 panel.id = 'awsconsoleextensionrole-panel'
 
 var flex = document.createElement("div")
+flex.id = "awsce-role-div"
 flex.style.cssText = `
 	display: flex;
 	width: 100%;
@@ -326,5 +377,134 @@ if (navbar == null) {
 if (!document.querySelector('button[data-testid=aws-services-list-button]').parentNode.parentNode.classList[0].startsWith('globalNav')) {
 	icon.style.cssText = "padding: 10px;"
 }
+
+var grey = document.createElement("div")
+grey.id = "awsce-grey"
+
+var searchbox = document.createElement("input")
+searchbox.id = "awsce-search-box"
+searchbox.placeholder = "role search"
+searchbox.autocomplete = "off"
+
+var search = document.createElement("div")
+search.id = "awsce-search"
+
+var searchresults = document.createElement("div")
+searchresults.id = "awsce-search-results"
+
+
+function doSearch() {
+	var searchtext = document.getElementById("awsce-search-box").value.trim()
+
+	if (searchtext === "") {
+		searchresults.style.display = "none"
+		return
+	}
+
+	var terms = searchtext.split(/\s+/)
+	var results
+
+	if (terms.length) {
+		results = document.querySelectorAll("#awsce-role-div input[type=submit]")
+		for (term of terms) {
+			results = Array.prototype.filter.call(results, item => item.id.includes(term))
+		}
+	}
+
+	if (results.length) {
+		searchresults.style.display = "block"
+		searchresults.innerHTML = ''
+		for (result of results) {
+			var item = document.createElement("p")
+			item.innerHTML = result.value
+			item.setAttribute("name", result.id)
+			item.className = "awsce-search-results"
+			searchresults.append(item)
+		}
+		var first = document.querySelector(".awsce-search-results")
+		first.classList.add("awsce-search-results-current")
+	} else {
+		searchresults.style.display = "none"
+	}
+}
+
+function searchMove(key) {
+	var currentClass = "awsce-search-results-current"
+	var current = document.querySelector(`.${currentClass}`)
+	if (current) {
+		if (key == "ArrowDown") {
+			var nextSibling = current.nextSibling
+			if (nextSibling) {
+				current.classList.remove(currentClass)
+				nextSibling.classList.add(currentClass)
+			}
+		}
+		if (key == "ArrowUp") {
+			var previousSibling = current.previousSibling
+			if (previousSibling) {
+				current.classList.remove(currentClass)
+				previousSibling.classList.add(currentClass)
+			}
+		}
+	} else {
+		var first = document.querySelector(".awsce-search-results")
+		first.classList.add(currentClass)
+	}
+}
+
+function searchEnter() {
+	var current = document.querySelector(".awsce-search-results-current")
+	var role = document.getElementById(current.getAttribute("name"))
+	role.click()
+}
+
+function searchClose() {
+	grey = document.getElementById('awsce-grey')
+	search = document.getElementById('awsce-search')
+	box = document.getElementById('awsce-search-box')
+	grey.style.display = "none"
+	search.style.display = "none"
+	document.body.style.overflow = ""
+}
+
+searchbox.addEventListener("keyup", event => {
+	switch(event.key) {
+		case "Home":
+		case "End":
+		case "ArrowLeft":
+		case "ArrowRight":
+		case "ArrowDown":
+		case "ArrowUp":
+			searchMove(event.key)
+			break;
+		case "Enter":
+			searchEnter()
+			break;
+		case "Escape":
+			searchClose()
+			break;
+		default:
+			doSearch()
+	}
+})
+
+grey.addEventListener("click", event => {
+	if (event.target.id === "awsce-grey") {
+		searchClose()
+	} else {
+		if (event.target.className.includes('awsce-search-results')) {
+			var currentClass = "awsce-search-results-current"
+			var current = document.querySelector(`.${currentClass}`)
+			current.classList.remove(currentClass)
+			event.target.classList.add(currentClass)
+			searchEnter()
+		}
+	}
+})
+
+document.body.prepend(grey)
+grey.append(search)
+search.append(searchbox)
+grey.append(searchresults)
 
 navbar.parentNode.prepend(iconDiv)
