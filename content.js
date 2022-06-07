@@ -245,15 +245,53 @@ style.innerHTML = `
 	}
 
 	.awsce-search-results {
-		margin: 1px;
-		padding: 5px;
+		margin: 0px;
+		padding: 6px;
 		font-family: ${fontFamily};
+		text-align: center;
 	}
 	.awsce-search-results-current {
-		border: 2px solid black;
+		border-bottom: 1px solid #232f3e;
+		border-top: 1px solid #232f3e;
 		background: white;
-		padding: 10px;
+		padding: 4px;
 		font-weight: bold;
+	}
+
+	#awsce-grey {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0,0,0,0.75);
+		z-index: 9999;
+		display: none;
+	}
+
+	#awsce-search {
+		margin: auto;
+		margin-top: 50px;
+		width: 600px;
+		background: #232f3e;
+		padding: 30px;
+	}
+
+	#awsce-search-box {
+		height: 40px;
+		width: 592px;
+		background: white;
+		text-align: center;
+		font-family: ${fontFamily};
+	}
+
+	#awsce-search-results {
+		border: 30px solid #232f3e;
+		border-top: 0;
+		margin: -1px auto;
+		width: 600px;
+		background: white;
+		display: none;
 	}
 `
 
@@ -340,51 +378,20 @@ if (!document.querySelector('button[data-testid=aws-services-list-button]').pare
 	icon.style.cssText = "padding: 10px;"
 }
 
-
 var grey = document.createElement("div")
 grey.id = "awsce-grey"
-grey.style.cssText = `
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0,0,0,0.75);
-	z-index: 9999;
-	display: none;
-}
-`
+
 var searchbox = document.createElement("input")
 searchbox.id = "awsce-search-box"
 searchbox.placeholder = "role search"
 searchbox.autocomplete = "off"
-searchbox.style.cssText = `
-	height: 40px;
-	width: 100%;
-	text-align: center;
-	font-family: ${fontFamily};
-`
+
 var search = document.createElement("div")
 search.id = "awsce-search"
-search.style.cssText = `
-	margin: auto;
-	margin-top: 50px;
-	width: 40%;
-	background: white;
-	padding: 30px;
-}
-`
+
 var searchresults = document.createElement("div")
 searchresults.id = "awsce-search-results"
-searchresults.style.cssText = `
-	border-top: 1px solid grey;
-	margin: auto;
-	width: 40%;
-	background: white;
-	padding: 10px 30px;
-	display: none;
-}
-`
+
 
 function doSearch() {
 	var searchtext = document.getElementById("awsce-search-box").value.trim()
@@ -451,6 +458,15 @@ function searchEnter() {
 	role.click()
 }
 
+function searchClose() {
+	grey = document.getElementById('awsce-grey')
+	search = document.getElementById('awsce-search')
+	box = document.getElementById('awsce-search-box')
+	grey.style.display = "none"
+	search.style.display = "none"
+	document.body.style.overflow = ""
+}
+
 searchbox.addEventListener("keyup", event => {
 	switch(event.key) {
 		case "Home":
@@ -465,15 +481,24 @@ searchbox.addEventListener("keyup", event => {
 			searchEnter()
 			break;
 		case "Escape":
-			grey = document.getElementById('awsce-grey')
-			search = document.getElementById('awsce-search')
-			box = document.getElementById('awsce-search-box')
-			grey.style.display = "none"
-			search.style.display = "none"
-			document.body.style.overflow = ""
+			searchClose()
 			break;
 		default:
 			doSearch()
+	}
+})
+
+grey.addEventListener("click", event => {
+	if (event.target.id === "awsce-grey") {
+		searchClose()
+	} else {
+		if (event.target.className.includes('awsce-search-results')) {
+			var currentClass = "awsce-search-results-current"
+			var current = document.querySelector(`.${currentClass}`)
+			current.classList.remove(currentClass)
+			event.target.classList.add(currentClass)
+			searchEnter()
+		}
 	}
 })
 
